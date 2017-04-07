@@ -80,6 +80,7 @@ public class bank_employee {
 
     @PUT
     @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
     public JsonObject updateEmployee(JsonObject emp_json) {
         //TODO receive password and validate then make changes
         //TODO response error type
@@ -101,6 +102,25 @@ public class bank_employee {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject deleteEmployee(@PathParam("username") String username) {
         boolean result = new EmployeeService().deleteEmployee(username);
+
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        if (result) {
+            builder.add("response", "success");
+        } else {
+            builder.add("response", "fail");
+        }
+
+        return builder.build();
+    }
+
+    @POST
+    @Path("/login")
+    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces({MediaType.APPLICATION_JSON})
+    public JsonObject validateLogin(JsonObject json) {
+        //TODO change this to FormParams
+        boolean result = new EmployeeService().validateLogin(json.getString("username"), json.getString("password"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 

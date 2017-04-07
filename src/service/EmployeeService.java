@@ -137,8 +137,36 @@ public class EmployeeService {
             statement.executeUpdate(SQL);
             sessionisSucess = true;
 
-        } catch (MySQLIntegrityConstraintViolationException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                conn.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return sessionisSucess;
+        }
+    }
+
+    public boolean validateLogin(String username, String password) {
+        Connection conn = null;
+        Statement statement;
+        ResultSet result;
+        boolean sessionisSucess = false;
+
+        try {
+            conn = connectDB();
+            statement = conn.createStatement();
+
+            String SQL = "SELECT password FROM employee WHERE username = '" + username + "'";
+            result = statement.executeQuery(SQL);
+
+            while (result.next()) {
+                if (result.getString("password").equals(password)) {
+                    sessionisSucess = true;
+                }
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
@@ -175,6 +203,8 @@ public class EmployeeService {
 
         //employeeService.updateEmployee("BK", "positions", "CEO");
 
-        employeeService.deleteEmployee("BKK");
+        //employeeService.deleteEmployee("BKK");
+
+        System.out.println(employeeService.validateLogin("iron","mana"));
     }
 }
