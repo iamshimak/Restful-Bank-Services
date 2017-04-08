@@ -18,13 +18,13 @@ public class Customer {
     private String accountNum;
     private String sortCode;
     private int balance;
-    private ArrayList<Card> cards;
+    private String card;
 
     public Customer(String name, Date dob, String address, String mobile, String email) {
         this(name, dob, address, mobile, email, null, null, null, 0, null);
     }
 
-    public Customer(String name, Date dob, String address, String mobile, String email, String accountType, String accountNum, String sortCode, int balance, ArrayList<Card> cards) {
+    public Customer(String name, Date dob, String address, String mobile, String email, String accountType, String accountNum, String sortCode, int balance, String card) {
         this.name = name;
         this.dob = dob;
         this.address = address;
@@ -34,7 +34,7 @@ public class Customer {
         this.accountNum = accountNum;
         this.sortCode = sortCode;
         this.balance = balance;
-        this.cards = cards;
+        this.card = card;
     }
 
     public String getName() {
@@ -109,12 +109,12 @@ public class Customer {
         this.balance = balance;
     }
 
-    public ArrayList<Card> getCards() {
-        return cards;
+    public String getCard() {
+        return card;
     }
 
-    public void setCards(ArrayList<Card> cards) {
-        this.cards = cards;
+    public void setCard(String card) {
+        this.card = card;
     }
 
     @Override
@@ -129,7 +129,7 @@ public class Customer {
                 ", accountNum='" + accountNum + '\'' +
                 ", sortCode='" + sortCode + '\'' +
                 ", balance=" + balance +
-                ", cards=" + cards.toString() +
+                ", card=" + card.toString() +
                 '}';
     }
 }
