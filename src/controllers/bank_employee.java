@@ -18,6 +18,7 @@ public class bank_employee {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getEmployees() {
+        //TODO not necessary
         JsonArrayBuilder builder = Json.createArrayBuilder();
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
 

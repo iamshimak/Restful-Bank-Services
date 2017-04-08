@@ -201,9 +201,9 @@ public class EmployeeService {
 
         //employeeService.createEmployee("naba", "CTO", "nababa", "no");
 
-        //employeeService.updateEmployee("BK", "positions", "CEO");
+        //employeeService.updateCustomer("BK", "positions", "CEO");
 
-        //employeeService.deleteEmployee("BKK");
+        //employeeService.deleteCustomer("BKK");
 
         System.out.println(employeeService.validateLogin("iron","mana"));
     }
