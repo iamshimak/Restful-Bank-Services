@@ -2,7 +2,6 @@ package controllers;
 
 import model.Customer;
 import service.CustomerService;
-import service.EmployeeService;
 
 import javax.json.*;
 import javax.ws.rs.*;

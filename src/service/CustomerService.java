@@ -5,6 +5,7 @@ import model.Customer;
 
 import java.sql.*;
 import java.util.*;
+import java.util.Date;
 
 /**
  * Created by ShimaK on 08-Apr-17.
@@ -72,6 +73,10 @@ public class CustomerService {
 
     public int createCustomer(String name, String dob, String address, String mobile, String email, String accountType,
                               String accountNum, String sortCode, String balance, String card) {
+
+        Date date = new Date(Long.parseLong(dob));
+        Timestamp stamp =  new Timestamp(date.getTime());
+
         Connection conn = null;
         Statement statement;
         int sessionisSucess = -1;
@@ -80,7 +85,7 @@ public class CustomerService {
             conn = connectDB();
             statement = conn.createStatement();
 
-            String SQL = "INSERT INTO customer VALUES ('" + name + "','" + dob + "','" + address + "','"
+            String SQL = "INSERT INTO customer VALUES ('" + name + "','" + stamp.toString() + "','" + address + "','"
                     + mobile + "','" + email + "','" + accountType + "','" + accountNum + "','" + sortCode + "','"
                     + balance + "','" + card + "')";
 
@@ -177,5 +182,8 @@ public class CustomerService {
     public static void main(String[] args) {
         CustomerService customerService = new CustomerService();
         customerService.getCustomers();
+
+        //customerService.createCustomer("shimak","1086073200000","colombo","0752199219","shimak2013@gmail.com","VIP",
+                //"052192220","55646","3000","498488");
     }
 }
