@@ -65,7 +65,7 @@ public class bank_customer {
 
     @POST
     @Consumes({MediaType.APPLICATION_JSON})
-    public JsonObject createEmployee(JsonObject emp_json) {
+    public JsonObject createCustomer(JsonObject emp_json) {
         //TODO response error type
         int result = new CustomerService().createCustomer(emp_json.getString("name"), emp_json.getString("dob")
                 , emp_json.getString("address"), emp_json.getString("mobile"), emp_json.getString("email")

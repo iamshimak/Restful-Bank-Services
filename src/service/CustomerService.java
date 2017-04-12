@@ -1,7 +1,6 @@
 package service;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
-import model.Card;
 import model.Customer;
 
 import java.sql.*;

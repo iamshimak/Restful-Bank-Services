@@ -9,6 +9,9 @@
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Jersey-2.2" />
+          <element id="library" level="project" name="mysql-connector-java-5.1.41-bin" />
+          <element id="library" level="project" name="jackson-jaxrs-json-provider-2.4.4" />
+          <element id="library" level="project" name="jersey-media-json-jackson-2.25.1" />
         </element>
       </element>
     </root>

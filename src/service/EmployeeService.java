@@ -199,7 +199,7 @@ public class EmployeeService {
         Employee employee = employeeService.getEmployee("BK");
         System.out.println(employee);
 
-        //employeeService.createEmployee("naba", "CTO", "nababa", "no");
+        //employeeService.createCustomer("naba", "CTO", "nababa", "no");
 
         //employeeService.updateCustomer("BK", "positions", "CEO");
 
