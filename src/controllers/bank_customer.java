@@ -26,10 +26,12 @@ public class bank_customer {
         } else {
             for (Customer customer : customers) {
                 objbuild.add("name", customer.getName());
-                objbuild.add("dob", customer.getDob().getTime());//date converted to milliseconds from 1970-01-01 00:00:00
+                objbuild.add("dob", customer.getDob().toString());
                 objbuild.add("address", customer.getAddress());
                 objbuild.add("mobile", customer.getMobile());
                 objbuild.add("email", customer.getEmail());
+                objbuild.add("accountNum", customer.getAccountNum());
+                objbuild.add("accountType", customer.getAccountType());
                 builder.add(objbuild);
             }
             objbuild.add("status", "success");
@@ -44,20 +46,21 @@ public class bank_customer {
     public JsonObject getCustomer(@PathParam("accountNum") String accountNUm) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
         Customer customer = new CustomerService().getCustomer(accountNUm);
-        //TODO add proper status value
-        objbuild.add("status", "success");
-
-        objbuild.add("name", customer.getName());
-        objbuild.add("dob", customer.getDob().getTime());//date converted to milliseconds from 1970-01-01 00:00:00
-        objbuild.add("address", customer.getAddress());
-        objbuild.add("mobile", customer.getMobile());
-        objbuild.add("email", customer.getEmail());
-        objbuild.add("accountType", customer.getAccountType());
-        objbuild.add("accountNum", customer.getAccountNum());
-        objbuild.add("sortCode", customer.getSortCode());
-        objbuild.add("balance", customer.getBalance());
-        //TODO change this to Card array
-        objbuild.add("card", customer.getCard().toString());
+        if (customer != null) {
+            objbuild.add("status", "success");
+            objbuild.add("name", customer.getName());
+            objbuild.add("dob", customer.getDob().getTime());//date converted to milliseconds from 1970-01-01 00:00:00
+            objbuild.add("address", customer.getAddress());
+            objbuild.add("mobile", customer.getMobile());
+            objbuild.add("email", customer.getEmail());
+            objbuild.add("accountType", customer.getAccountType());
+            objbuild.add("accountNum", customer.getAccountNum());
+            objbuild.add("sortCode", customer.getSortCode());
+            objbuild.add("balance", customer.getBalance());
+            objbuild.add("card", customer.getCard());
+        } else {
+            objbuild.add("status", "fail");
+        }
 
         return objbuild.build();
     }

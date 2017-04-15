@@ -74,8 +74,13 @@ public class CustomerService {
     public int createCustomer(String name, String dob, String address, String mobile, String email, String accountType,
                               String accountNum, String sortCode, String balance, String card) {
 
-        Date date = new Date(Long.parseLong(dob));
-        Timestamp stamp =  new Timestamp(date.getTime());
+        String[] date = dob.split(":");
+        Date dateformated = new Date(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[1]));
+        Timestamp stamp =  new Timestamp(dateformated.getTime());
+
+        for (String s: date) {
+            System.out.println(s);
+        }
 
         Connection conn = null;
         Statement statement;
@@ -181,9 +186,9 @@ public class CustomerService {
 
     public static void main(String[] args) {
         CustomerService customerService = new CustomerService();
-        customerService.getCustomers();
+        //customerService.getCustomers();
 
-        //customerService.createCustomer("shimak","1086073200000","colombo","0752199219","shimak2013@gmail.com","VIP",
-                //"052192220","55646","3000","498488");
+        customerService.createCustomer("shimak","1998:12:21","colombo","0752199219","shimak2013@gmail.com","VIP",
+        "1","55646","3000","498488");
     }
 }
