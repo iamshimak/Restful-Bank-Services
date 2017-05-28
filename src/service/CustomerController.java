@@ -10,7 +10,7 @@ import java.util.Date;
 /**
  * Created by ShimaK on 08-Apr-17.
  */
-public class CustomerService {
+public class CustomerController {
     public ArrayList<Customer> getCustomers() {
         ArrayList<Customer> customers = new ArrayList<>();
         Connection conn;
@@ -160,8 +160,8 @@ public class CustomerService {
             statement = conn.createStatement();
 
             String SQL = "DELETE FROM customer WHERE accountNumber = '" + accountNum + "'";
-            statement.executeUpdate(SQL);
-            sessionisSucess = true;
+            int session = statement.executeUpdate(SQL);
+            if(session > 0) sessionisSucess = true;
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -185,10 +185,12 @@ public class CustomerService {
     }
 
     public static void main(String[] args) {
-        CustomerService customerService = new CustomerService();
+        CustomerController customerService = new CustomerController();
         //customerService.getCustomers();
 
-        customerService.createCustomer("shimak","1998:12:21","colombo","0752199219","shimak2013@gmail.com","VIP",
-        "1","55646","3000","498488");
+        /*customerService.createCustomer("shimak","1998:12:21","colombo","0752199219","shimak2013@gmail.com","VIP",
+        "1","55646","3000","498488");*/
+
+        //System.out.println(customerService.deleteCustomer("1"));
     }
 }
