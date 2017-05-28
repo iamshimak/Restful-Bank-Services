@@ -1,7 +1,7 @@
 package controllers;
 
 import model.Employee;
-import service.EmployeeService;
+import service.EmployeeController;
 
 import javax.json.*;
 import javax.ws.rs.*;
@@ -12,8 +12,7 @@ import java.util.ArrayList;
  * Created by ShimaK on 07-Apr-17.
  */
 @Path("/employee")
-public class bank_employee {
-    private EmployeeService employeeService;
+public class EmployeeService {
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
@@ -22,7 +21,7 @@ public class bank_employee {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
 
-        ArrayList<Employee> employees = new EmployeeService().getEmployees();
+        ArrayList<Employee> employees = new EmployeeController().getEmployees();
 
         if (employees == null || employees.size() < 1) {
             objbuild.add("status", "fail");
@@ -46,7 +45,7 @@ public class bank_employee {
     public JsonObject getEmployee(@PathParam("username") String username) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
 
-        Employee employee = new EmployeeService().getEmployee(username);
+        Employee employee = new EmployeeController().getEmployee(username);
         if (employee != null) {
             objbuild.add("status", "success");
             objbuild.add("name", employee.getName());
@@ -64,7 +63,7 @@ public class bank_employee {
     @Consumes({MediaType.APPLICATION_JSON})
     public JsonObject createEmployee(JsonObject emp_json) {
         //TODO response error type
-        int result = new EmployeeService().createEmployee(emp_json.getString("name"), emp_json.getString("position")
+        int result = new EmployeeController().createEmployee(emp_json.getString("name"), emp_json.getString("position")
                 , emp_json.getString("username"), emp_json.getString("password"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -85,7 +84,7 @@ public class bank_employee {
     public JsonObject updateEmployee(JsonObject emp_json) {
         //TODO receive password and validate then make changes
         //TODO response error type
-        boolean result = new EmployeeService().updateEmployee(emp_json.getString("username")
+        boolean result = new EmployeeController().updateEmployee(emp_json.getString("username")
                 , emp_json.getString("column"), emp_json.getString("value"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -102,7 +101,7 @@ public class bank_employee {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject deleteEmployee(@PathParam("username") String username) {
-        boolean result = new EmployeeService().deleteEmployee(username);
+        boolean result = new EmployeeController().deleteEmployee(username);
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
@@ -121,7 +120,7 @@ public class bank_employee {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject validateLogin(JsonObject json) {
         //TODO change this to FormParams
-        boolean result = new EmployeeService().validateLogin(json.getString("username"), json.getString("password"));
+        boolean result = new EmployeeController().validateLogin(json.getString("username"), json.getString("password"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
