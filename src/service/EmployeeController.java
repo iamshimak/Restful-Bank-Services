@@ -9,7 +9,7 @@ import java.util.ArrayList;
 /**
  * Created by ShimaK on 07-Apr-17.
  */
-public class EmployeeService {
+public class EmployeeController {
     public ArrayList<Employee> getEmployees() {
         ArrayList<Employee> employees = new ArrayList<>();
         Connection conn;
@@ -189,7 +189,7 @@ public class EmployeeService {
 
     //Test cases
     public static void main(String[] args) {
-        EmployeeService employeeService = new EmployeeService();
+        EmployeeController employeeService = new EmployeeController();
 
         ArrayList<Employee> employes = employeeService.getEmployees();
         for (Employee emp : employes) {
