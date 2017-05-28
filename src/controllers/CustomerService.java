@@ -1,7 +1,7 @@
 package controllers;
 
 import model.Customer;
-import service.CustomerService;
+import service.CustomerController;
 
 import javax.json.*;
 import javax.ws.rs.*;
@@ -12,11 +12,11 @@ import java.util.ArrayList;
  * Created by ShimaK on 08-Apr-17.
  */
 @Path("/customer")
-public class bank_customer {
+public class CustomerService {
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getCustomers() {
-        ArrayList<Customer> customers = new CustomerService().getCustomers();
+        ArrayList<Customer> customers = new CustomerController().getCustomers();
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
@@ -45,7 +45,7 @@ public class bank_customer {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getCustomer(@PathParam("accountNum") String accountNUm) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
-        Customer customer = new CustomerService().getCustomer(accountNUm);
+        Customer customer = new CustomerController().getCustomer(accountNUm);
         if (customer != null) {
             objbuild.add("status", "success");
             objbuild.add("name", customer.getName());
@@ -69,7 +69,7 @@ public class bank_customer {
     @Consumes({MediaType.APPLICATION_JSON})
     public JsonObject createCustomer(JsonObject emp_json) {
         //TODO response error type
-        int result = new CustomerService().createCustomer(emp_json.getString("name"), emp_json.getString("dob")
+        int result = new CustomerController().createCustomer(emp_json.getString("name"), emp_json.getString("dob")
                 , emp_json.getString("address"), emp_json.getString("mobile"), emp_json.getString("email")
                 , emp_json.getString("accountType"), emp_json.getString("accountNumber"), emp_json.getString("sortCode")
                 , emp_json.getString("balance"), emp_json.getString("card"));
@@ -93,7 +93,7 @@ public class bank_customer {
     public JsonObject updateCustomer(JsonObject emp_json) {
         //TODO receive password and validate then make changes
         //TODO response error type
-        boolean result = new CustomerService().updateCustomer(emp_json.getString("accountNum")
+        boolean result = new CustomerController().updateCustomer(emp_json.getString("accountNum")
                 , emp_json.getString("column"), emp_json.getString("value"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -110,7 +110,7 @@ public class bank_customer {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject deleteCustomer(@PathParam("accountNum") String accountNum) {
-        boolean result = new CustomerService().deleteCustomer(accountNum);
+        boolean result = new CustomerController().deleteCustomer(accountNum);
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
