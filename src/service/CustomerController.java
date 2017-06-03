@@ -3,6 +3,7 @@ package service;
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
 import model.Customer;
 
+import javax.json.*;
 import java.sql.*;
 import java.util.*;
 import java.util.Date;
@@ -11,11 +12,13 @@ import java.util.Date;
  * Created by ShimaK on 08-Apr-17.
  */
 public class CustomerController {
-    public ArrayList<Customer> getCustomers() {
-        ArrayList<Customer> customers = new ArrayList<>();
+    public JsonObject getCustomers() {
         Connection conn;
         Statement statement;
         ResultSet result;
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         try {
             conn = connectDB();
@@ -26,14 +29,19 @@ public class CustomerController {
             result = statement.executeQuery(SQL);
 
             while (result.next()) {
-                customers.add(new Customer(result.getString("name"), result.getDate("dob"), result.getString("address")
-                        , result.getString("mobile"), result.getString("email"), result.getString("accountType")
-                        , result.getString("accountNumber"), result.getString("sortCode")
-                        , Integer.parseInt(result.getString("balance"))
-                        , result.getString("card")));
-                System.out.println(customers.toString());
+                objectBuilder.add("name", result.getString("name"));
+                objectBuilder.add("dob", result.getDate("dob").toString());
+                objectBuilder.add("address", result.getString("address"));
+                objectBuilder.add("mobile", result.getString("mobile"));
+                objectBuilder.add("email", result.getString("email"));
+                objectBuilder.add("accountType", result.getString("accountType"));
+                objectBuilder.add("accountNumber", result.getString("accountNumber"));
+                objectBuilder.add("sortCode", result.getString("sortCode"));
+                objectBuilder.add("balance", result.getString("balance"));
+                objectBuilder.add("card", result.getString("card"));
+                arrayBuilder.add(objectBuilder);
             }
-            return customers;
+            return objectBuilder.add("body", arrayBuilder.build()).build();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -41,11 +49,11 @@ public class CustomerController {
         }
     }
 
-    public Customer getCustomer(String accountNum) {
-        Customer customer = null;
+    public JsonObject getCustomer(String accountNum) {
         Connection conn;
         Statement statement;
         ResultSet result;
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         try {
             conn = connectDB();
@@ -55,20 +63,24 @@ public class CustomerController {
 
             result = statement.executeQuery(SQL);
 
-            while (result.next()) {
-                customer = new Customer(result.getString("name"), result.getDate("dob"), result.getString("address")
-                        , result.getString("mobile"), result.getString("email"), result.getString("accountType")
-                        , result.getString("accountNumber"), result.getString("sortCode")
-                        , Integer.parseInt(result.getString("balance"))
-                        , result.getString("card"));
-                System.out.println(customer.toString());
-            }
+            result.next();
+
+            objectBuilder.add("name", result.getString("name"));
+            objectBuilder.add("dob", result.getDate("dob").toString());
+            objectBuilder.add("address", result.getString("address"));
+            objectBuilder.add("mobile", result.getString("mobile"));
+            objectBuilder.add("email", result.getString("email"));
+            objectBuilder.add("accountType", result.getString("accountType"));
+            objectBuilder.add("accountNumber", result.getString("accountNumber"));
+            objectBuilder.add("sortCode", result.getString("sortCode"));
+            objectBuilder.add("balance", result.getString("balance"));
+            objectBuilder.add("card", result.getString("card"));
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return customer;
+        return objectBuilder.build();
     }
 
     public int createCustomer(String name, String dob, String address, String mobile, String email, String accountType,
@@ -76,9 +88,9 @@ public class CustomerController {
 
         String[] date = dob.split(":");
         Date dateformated = new Date(Integer.parseInt(date[2]), Integer.parseInt(date[1]), Integer.parseInt(date[1]));
-        Timestamp stamp =  new Timestamp(dateformated.getTime());
+        Timestamp stamp = new Timestamp(dateformated.getTime());
 
-        for (String s: date) {
+        for (String s : date) {
             System.out.println(s);
         }
 
@@ -103,6 +115,7 @@ public class CustomerController {
             e.printStackTrace();
         } finally {
             try {
+                assert conn != null;
                 conn.close();
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -161,7 +174,7 @@ public class CustomerController {
 
             String SQL = "DELETE FROM customer WHERE accountNumber = '" + accountNum + "'";
             int session = statement.executeUpdate(SQL);
-            if(session > 0) sessionisSucess = true;
+            if (session > 0) sessionisSucess = true;
 
         } catch (SQLException e) {
             e.printStackTrace();
