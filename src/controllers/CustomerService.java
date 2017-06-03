@@ -13,31 +13,25 @@ import java.util.ArrayList;
  */
 @Path("/customer")
 public class CustomerService {
+    private CustomerController customerController;
+
+    public CustomerService() {
+        customerController = new CustomerController();
+    }
+
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getCustomers() {
-        ArrayList<Customer> customers = new CustomerController().getCustomers();
-
-        JsonArrayBuilder builder = Json.createArrayBuilder();
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
+        JsonObject customers = customerController.getCustomers();
 
-        if (customers == null || customers.size() < 1) {
+        if (customers == null || customers.getJsonArray("body").isEmpty()) {
             objbuild.add("status", "fail");
         } else {
-            for (Customer customer : customers) {
-                objbuild.add("name", customer.getName());
-                objbuild.add("dob", customer.getDob().toString());
-                objbuild.add("address", customer.getAddress());
-                objbuild.add("mobile", customer.getMobile());
-                objbuild.add("email", customer.getEmail());
-                objbuild.add("accountNum", customer.getAccountNum());
-                objbuild.add("accountType", customer.getAccountType());
-                builder.add(objbuild);
-            }
             objbuild.add("status", "success");
+            objbuild.add("body", customers.getJsonArray("body"));
         }
-
-        return objbuild.add("body", builder.build()).build();
+        return objbuild.build();
     }
 
     @Path("{accountNum}")
@@ -45,23 +39,13 @@ public class CustomerService {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getCustomer(@PathParam("accountNum") String accountNUm) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
-        Customer customer = new CustomerController().getCustomer(accountNUm);
-        if (customer != null) {
+        JsonObject customer = customerController.getCustomer(accountNUm);
+        if (customer != null || !customer.isEmpty()) {
             objbuild.add("status", "success");
-            objbuild.add("name", customer.getName());
-            objbuild.add("dob", customer.getDob().getTime());//date converted to milliseconds from 1970-01-01 00:00:00
-            objbuild.add("address", customer.getAddress());
-            objbuild.add("mobile", customer.getMobile());
-            objbuild.add("email", customer.getEmail());
-            objbuild.add("accountType", customer.getAccountType());
-            objbuild.add("accountNum", customer.getAccountNum());
-            objbuild.add("sortCode", customer.getSortCode());
-            objbuild.add("balance", customer.getBalance());
-            objbuild.add("card", customer.getCard());
         } else {
             objbuild.add("status", "fail");
+            objbuild.add("body",customer);
         }
-
         return objbuild.build();
     }
 
@@ -69,7 +53,7 @@ public class CustomerService {
     @Consumes({MediaType.APPLICATION_JSON})
     public JsonObject createCustomer(JsonObject emp_json) {
         //TODO response error type
-        int result = new CustomerController().createCustomer(emp_json.getString("name"), emp_json.getString("dob")
+        int result = customerController.createCustomer(emp_json.getString("name"), emp_json.getString("dob")
                 , emp_json.getString("address"), emp_json.getString("mobile"), emp_json.getString("email")
                 , emp_json.getString("accountType"), emp_json.getString("accountNumber"), emp_json.getString("sortCode")
                 , emp_json.getString("balance"), emp_json.getString("card"));
@@ -77,13 +61,12 @@ public class CustomerService {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         if (result == 0) {
-            builder.add("response", "success");
+            builder.add("status", "success");
         } else if (result == -1) {
-            builder.add("response", "fail");
+            builder.add("status", "fail");
         } else {
-            builder.add("response", "exist");
+            builder.add("status", "exist");
         }
-
         return builder.build();
     }
 
@@ -93,7 +76,7 @@ public class CustomerService {
     public JsonObject updateCustomer(JsonObject emp_json) {
         //TODO receive password and validate then make changes
         //TODO response error type
-        boolean result = new CustomerController().updateCustomer(emp_json.getString("accountNum")
+        boolean result = customerController.updateCustomer(emp_json.getString("accountNum")
                 , emp_json.getString("column"), emp_json.getString("value"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -110,16 +93,14 @@ public class CustomerService {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject deleteCustomer(@PathParam("accountNum") String accountNum) {
-        boolean result = new CustomerController().deleteCustomer(accountNum);
-
+        boolean result = customerController.deleteCustomer(accountNum);
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         if (result) {
-            builder.add("response", "success");
+            builder.add("status", "success");
         } else {
-            builder.add("response", "fail");
+            builder.add("status", "fail");
         }
-
         return builder.build();
     }
 }
