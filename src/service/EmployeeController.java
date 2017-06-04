@@ -1,8 +1,10 @@
 package service;
 
 import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import jdk.nashorn.api.scripting.JSObject;
 import model.Employee;
 
+import javax.json.*;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -10,11 +12,13 @@ import java.util.ArrayList;
  * Created by ShimaK on 07-Apr-17.
  */
 public class EmployeeController {
-    public ArrayList<Employee> getEmployees() {
-        ArrayList<Employee> employees = new ArrayList<>();
+    public JsonObject getEmployees() {
         Connection conn;
         Statement statement;
         ResultSet result;
+
+        JsonArrayBuilder arrayBuilder = Json.createArrayBuilder();
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         try {
             conn = connectDB();
@@ -25,10 +29,13 @@ public class EmployeeController {
             result = statement.executeQuery(SQL);
 
             while (result.next()) {
-                employees.add(new Employee(result.getString("name"), result.getString("position")
-                        , result.getString("username"), result.getString("password")));
+                objectBuilder.add("name",result.getString("name"));
+                objectBuilder.add("position",result.getString("position"));
+                objectBuilder.add("username",result.getString("username"));
+                objectBuilder.add("password",result.getString("password"));
+                arrayBuilder.add(objectBuilder);
             }
-            return employees;
+            return objectBuilder.add("body", arrayBuilder.build()).build();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -36,11 +43,12 @@ public class EmployeeController {
         }
     }
 
-    public Employee getEmployee(String username) {
+    public JsonObject getEmployee(String username) {
         Connection conn;
         Statement statement;
         ResultSet result;
-        Employee employees = null;
+
+        JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
 
         try {
             conn = connectDB();
@@ -51,10 +59,12 @@ public class EmployeeController {
             result = statement.executeQuery(SQL);
 
             while (result.next()) {
-                employees = new Employee(result.getString("name"), result.getString("position")
-                        , result.getString("username"), result.getString("password"));
+                objectBuilder.add("name",result.getString("name"));
+                objectBuilder.add("position",result.getString("position"));
+                objectBuilder.add("username",result.getString("username"));
+                objectBuilder.add("password",result.getString("password"));
             }
-            return employees;
+            return objectBuilder.build();
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -87,8 +97,8 @@ public class EmployeeController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return sessionisSucess;
         }
+        return sessionisSucess;
     }
 
     public boolean updateEmployee(String username, String column, String updateVal) {
@@ -120,8 +130,8 @@ public class EmployeeController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return sessionisSucess;
         }
+        return sessionisSucess;
     }
 
     public boolean deleteEmployee(String username) {
@@ -145,8 +155,8 @@ public class EmployeeController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return sessionisSucess;
         }
+        return sessionisSucess;
     }
 
     public boolean validateLogin(String username, String password) {
@@ -175,8 +185,8 @@ public class EmployeeController {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return sessionisSucess;
         }
+        return sessionisSucess;
     }
 
     private Connection connectDB() throws SQLException {
@@ -191,13 +201,13 @@ public class EmployeeController {
     public static void main(String[] args) {
         EmployeeController employeeService = new EmployeeController();
 
-        ArrayList<Employee> employes = employeeService.getEmployees();
+        /*ArrayList<Employee> employes = employeeService.getEmployees();
         for (Employee emp : employes) {
             System.out.println(emp);
         }
 
         Employee employee = employeeService.getEmployee("BK");
-        System.out.println(employee);
+        System.out.println(employee);*/
 
         //employeeService.createCustomer("naba", "CTO", "nababa", "no");
 

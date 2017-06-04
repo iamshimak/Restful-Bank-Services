@@ -1,6 +1,5 @@
 package controllers;
 
-import model.Employee;
 import service.EmployeeController;
 
 import javax.json.*;
@@ -13,30 +12,26 @@ import java.util.ArrayList;
  */
 @Path("/employee")
 public class EmployeeService {
+    private EmployeeController employeeController;
+
+    public EmployeeService() {
+        this.employeeController = employeeController;
+    }
 
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getEmployees() {
-        //TODO not necessary
-        JsonArrayBuilder builder = Json.createArrayBuilder();
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
+        JsonObject employees = employeeController.getEmployees();
 
-        ArrayList<Employee> employees = new EmployeeController().getEmployees();
-
-        if (employees == null || employees.size() < 1) {
+        if (employees == null || employees.isEmpty()) {
             objbuild.add("status", "fail");
         } else {
-            for (Employee employee : employees) {
-                objbuild.add("name", employee.getName());
-                objbuild.add("position", employee.getPosition());
-                objbuild.add("username", employee.getUsername());
-                objbuild.add("password", employee.getPassword());
-                builder.add(objbuild);
-            }
             objbuild.add("status", "success");
+            objbuild.add("body", employees.getJsonArray("body"));
         }
 
-        return objbuild.add("body", builder.build()).build();
+        return objbuild.build();
     }
 
     @Path("{username}")
@@ -44,18 +39,13 @@ public class EmployeeService {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getEmployee(@PathParam("username") String username) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
-
-        Employee employee = new EmployeeController().getEmployee(username);
-        if (employee != null) {
+        JsonObject employee = new EmployeeController().getEmployee(username);
+        if (employee != null || !employee.isEmpty()) {
             objbuild.add("status", "success");
-            objbuild.add("name", employee.getName());
-            objbuild.add("position", employee.getPosition());
-            objbuild.add("username", employee.getUsername());
-            objbuild.add("password", employee.getPassword());
         } else {
             objbuild.add("status", "fail");
+            objbuild.add("body", employee);
         }
-
         return objbuild.build();
     }
 
@@ -68,11 +58,11 @@ public class EmployeeService {
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
         if (result == 0) {
-            builder.add("response", "success");
+            builder.add("status", "success");
         } else if (result == -1) {
-            builder.add("response", "fail");
+            builder.add("status", "fail");
         } else {
-            builder.add("response", "exist");
+            builder.add("status", "exist");
         }
 
         return builder.build();
