@@ -15,7 +15,7 @@ public class EmployeeService {
     private EmployeeController employeeController;
 
     public EmployeeService() {
-        this.employeeController = employeeController;
+        employeeController = new EmployeeController();
     }
 
     @GET
@@ -39,7 +39,7 @@ public class EmployeeService {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject getEmployee(@PathParam("username") String username) {
         JsonObjectBuilder objbuild = Json.createObjectBuilder();
-        JsonObject employee = new EmployeeController().getEmployee(username);
+        JsonObject employee = employeeController.getEmployee(username);
         if (employee != null || !employee.isEmpty()) {
             objbuild.add("status", "success");
         } else {
@@ -53,7 +53,7 @@ public class EmployeeService {
     @Consumes({MediaType.APPLICATION_JSON})
     public JsonObject createEmployee(JsonObject emp_json) {
         //TODO response error type
-        int result = new EmployeeController().createEmployee(emp_json.getString("name"), emp_json.getString("position")
+        int result = employeeController.createEmployee(emp_json.getString("name"), emp_json.getString("position")
                 , emp_json.getString("username"), emp_json.getString("password"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -74,7 +74,7 @@ public class EmployeeService {
     public JsonObject updateEmployee(JsonObject emp_json) {
         //TODO receive password and validate then make changes
         //TODO response error type
-        boolean result = new EmployeeController().updateEmployee(emp_json.getString("username")
+        boolean result = employeeController.updateEmployee(emp_json.getString("username")
                 , emp_json.getString("column"), emp_json.getString("value"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
@@ -91,7 +91,7 @@ public class EmployeeService {
     @DELETE
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject deleteEmployee(@PathParam("username") String username) {
-        boolean result = new EmployeeController().deleteEmployee(username);
+        boolean result = employeeController.deleteEmployee(username);
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
@@ -110,7 +110,7 @@ public class EmployeeService {
     @Produces({MediaType.APPLICATION_JSON})
     public JsonObject validateLogin(JsonObject json) {
         //TODO change this to FormParams
-        boolean result = new EmployeeController().validateLogin(json.getString("username"), json.getString("password"));
+        boolean result = employeeController.validateLogin(json.getString("username"), json.getString("password"));
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
